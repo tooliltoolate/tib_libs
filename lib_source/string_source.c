@@ -99,7 +99,7 @@ int *string_to_intarr(char* substrate, size_t *returned_size){
 		i++;
 	}
 	while(1);
-	*returned_size = result_index_counter - 1;
+	*returned_size = result_index_counter;
 	return result;
 
 }
