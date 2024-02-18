@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "../../tib_includes/libtibstrings.h"
 int where_dot(char *text){
 	
@@ -56,7 +55,7 @@ int string_to_int(char* input){
 		nFlag = -1.0;
 		text = substring(1, len(input), input);
 		} 
-	return toInt(text) * nFlag; 
+	return to_int(text) * nFlag; 
 }
 
 double string_to_float(char* input){
@@ -70,13 +69,13 @@ double string_to_float(char* input){
 		text = substring(1, len(input), input);
 		} 
 	int periodPos = where_dot(text);
-	long long int integralPart = toInt(substring(0, periodPos, text));
-	result = integralPart + toFraction(substring(periodPos + 1, len(text), text));
+	long long int integralPart = to_int(substring(0, periodPos, text));
+	result = integralPart + to_fraction(substring(periodPos + 1, len(text), text));
 	return result * nFlag;
 }
 
 
-int *string_to_intarr(char* substrate){
+int *string_to_intarr(char* substrate, size_t *returned_size){
 	int *result, i = 0, result_index_counter = 0, cache_index_counter = 0;
 	char cache[30];
 
@@ -84,11 +83,11 @@ int *string_to_intarr(char* substrate){
 	//okay, so i run through the string
 	//do while loop maybe
 	//putting the numbers into a smaller, temp string along the way
-	//and if i reach a space, i get that string, and toInt it.
+	//and if i reach a space, i get that string, and to_int it.
 	do{
 		if(*(substrate + i) == '\0' || *(substrate + i) == ' '){
 			cache[cache_index_counter] = '\0';
-			*(result + result_index_counter) = toInt(cache);
+			*(result + result_index_counter) = to_int(cache);
 			result_index_counter++;
 			cache_index_counter = 0;
 			if(*(substrate + i) == '\0') break;
@@ -100,35 +99,36 @@ int *string_to_intarr(char* substrate){
 		i++;
 	}
 	while(1);
+	*returned_size = i;
 	return result;
 
 }
 
 
 
-long long int toIntletter(char n){
+long long int to_int_letter(char n){
 	long long int result = n;
 	return result - 48;}
 
-long long int toInt(char *text){
+long long int to_int(char *text){
 	long long int r = 0;
 	int i;
 	char *reversed = calloc(100, sizeof(char));
 	reversed = reverse_c(text, len(text));
 	for (i = 0; reversed[i] != '\0'; i++){
-		r += (long long int)((long long int)toIntletter(reversed[i]) * (long long int)exponentiate(10, i));}
+		r += (long long int)((long long int)to_int_letter(reversed[i]) * (long long int)exponentiate(10, i));}
 	return r;
 }
 
 
-double toFraction(char *text){
+double to_fraction(char *text){
 	//how the fuck do pointers work
 	double r = 0, letterValue = 0, coefficient = 0;
 	int i;
 	char *reversed = calloc(100, sizeof(char));
 	reversed = reverse_c(text, len(text));
 	for (i = 0; reversed[i] != '\0'; i++){
-		letterValue = (double)toIntletter(reversed[i]);
+		letterValue = (double)to_int_letter(reversed[i]);
 		coefficient = (double)(1.0 / exponentiate(10, i + 1));
 		r += (double)(letterValue * coefficient);}
 	return r;
