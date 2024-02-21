@@ -1,4 +1,7 @@
 #include "../../tib_includes/libtibstrings.h"
+//to change:
+//stop allocating shit when u can
+
 int where_dot(char *text){
 	
 	int i = 0;
@@ -69,17 +72,17 @@ double string_to_float(char* input){
 		text = substring(1, len(input), input);
 		} 
 	int periodPos = where_dot(text);
+	if (periodPos == -1) return (double) to_int(text);
 	long long int integralPart = to_int(substring(0, periodPos, text));
 	result = integralPart + to_fraction(substring(periodPos + 1, len(text), text));
 	return result * nFlag;
 }
 
 
-int *string_to_intarr(char* substrate, size_t *returned_size){
-	int *result, i = 0, result_index_counter = 0, cache_index_counter = 0;
+int string_to_intarr(char* substrate, int* returned_array){
+	int i = 0, result_index_counter = 0, cache_index_counter = 0;
 	char cache[30];
 
-	result = calloc(21, sizeof(int));
 	//okay, so i run through the string
 	//do while loop maybe
 	//putting the numbers into a smaller, temp string along the way
@@ -87,7 +90,7 @@ int *string_to_intarr(char* substrate, size_t *returned_size){
 	do{
 		if(*(substrate + i) == '\0' || *(substrate + i) == ' '){
 			cache[cache_index_counter] = '\0';
-			*(result + result_index_counter) = to_int(cache);
+			*(returned_array + result_index_counter) = to_int(cache);
 			result_index_counter++;
 			cache_index_counter = 0;
 			if(*(substrate + i) == '\0') break;
@@ -99,8 +102,7 @@ int *string_to_intarr(char* substrate, size_t *returned_size){
 		i++;
 	}
 	while(1);
-	*returned_size = result_index_counter;
-	return result;
+	return result_index_counter;
 
 }
 
@@ -163,5 +165,34 @@ char *remove_space(char *input){
 		input_counter++;
 	}
 	return result;
+}
+
+
+int string_to_doublearr(char* substrate, double* returned_array){
+	int i = 0, result_index_counter = 0, cache_index_counter = 0;
+	char cache[30];
+
+	//okay, so i run through the string
+	//do while loop maybe
+	//putting the numbers into a smaller, temp string along the way
+	//and if i reach a space, i get that string, and to_int it.
+	do{
+		if(*(substrate + i) == '\0' || *(substrate + i) == ' '){
+			cache[cache_index_counter] = '\0';
+			*(returned_array + result_index_counter) = string_to_float(cache);
+			result_index_counter++;
+			cache_index_counter = 0;
+			if(*(substrate + i) == '\0') break;
+		}
+		else{
+			cache[cache_index_counter] = *(substrate + i);
+			cache_index_counter++;
+		}
+		i++;
+	}
+	while(1);
+	return result_index_counter;
+
+	
 }
 
